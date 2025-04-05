@@ -2,14 +2,17 @@ const mysql = require('mysql2/promise');
 require('dotenv').config();
 
 const pool = mysql.createPool({
-  host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '123pericotitos123',
-  database: process.env.DB_NAME || 'bdsignosvitales',
+  // Usar las variables de entorno tal como las proporciona Railway
+  host: process.env.MYSQLHOST || 'mysql.railway.internal',
+  user: process.env.MYSQLUSER || 'root',
+  password: process.env.MYSQLPASSWORD || 'PpQOARvtrOzCgcahzreQuxFQzJdjExSX',
+  database: process.env.MYSQLDATABASE || 'railway',
+  port: process.env.MYSQLPORT || 3306,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
 });
+
 // Función para probar la conexión
 const testConnection = async () => {
   try {
@@ -19,8 +22,14 @@ const testConnection = async () => {
     return true;
   } catch (error) {
     console.error('Error al conectar a la base de datos:', error);
+    console.error('Variables de conexión utilizadas:', {
+      host: process.env.MYSQLHOST,
+      user: process.env.MYSQLUSER,
+      database: process.env.MYSQLDATABASE,
+      port: process.env.MYSQLPORT
+    });
     return false;
   }
 };
 
-module.exports = { pool, testConnection };
+module.exports = { pool, testConnection };  
